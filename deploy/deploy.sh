@@ -4,7 +4,7 @@
 # - sudo npm install -g gulp-cli
 # - sudo npm install -g tsd
 
-SERVERS = ( 52.42.187.96 52.41.100.249 )
+SERVERS=( 52.42.187.96 52.41.100.249 )
 
 for SERVER in "${SERVERS[@]}"
 do
