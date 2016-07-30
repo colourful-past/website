@@ -15,6 +15,7 @@ declare module "react-photoswipe" {
         isOpen?: boolean;
         images?: IImage[];
         options?: any;
+        onClose?: ()=>void;
     }
     type PhotoSwipe = React.ClassicComponent<PhotoSwipeProps, {}>;
     var PhotoSwipe: React.ClassicComponentClass<PhotoSwipeProps>;

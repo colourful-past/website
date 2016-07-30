@@ -7,6 +7,6 @@
         "dist": true,
         "release": true,
         "media": true,
-        "node_modules": true
+        "node_modules": false
     }
 }

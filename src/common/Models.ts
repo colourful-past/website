@@ -6,6 +6,7 @@ export interface ISearchItem
     title: string;
     description: string;
     source: string;
+    isColourising?: boolean;
 }
 
 export interface ISearchResult

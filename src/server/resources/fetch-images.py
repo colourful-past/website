@@ -86,13 +86,42 @@ def fetch(query):
                 else:
                     description = ''
 
+                link = derive_link(good_link)
+
                 yield {
                     "title": result['title'],
                     "description": description,
                     "source": urlparse(good_link).hostname,
-                    "original": good_link,
-                    "colourisedImage": None
+                    "originalImageUrl": link,
                 }
+
+
+
+def derive_link(link):
+    r = requests.get(link)
+    html = fromstring(r.content)
+    website = urlparse(r.url).hostname
+
+    if 'encore.newcastle.edu.au' in website:
+        otherMetadata = html.xpath('.//tr[contains(@class, "otherMetadata")]')
+        j = lambda el: ''.join(el.itertext()).strip()
+        otherMetadata = {
+            j(oM[0]).strip(':'): j(oM[1])
+            for oM in otherMetadata
+        }
+
+        if 'Rights' in otherMetadata:
+            if otherMetadata['Rights'] != 'Public domain':
+                raise Copyrighted
+
+        img, = html.xpath('.//a[@id="blobLink2"]/@href')
+
+        return 'http://encore.newcastle.edu.au' + img
+
+    else:
+        raise Exception(website)
+
+    return link
 
 
 def fetchAtLeast(query, count):

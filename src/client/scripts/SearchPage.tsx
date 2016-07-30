@@ -19,7 +19,8 @@ const imgStyle : React.CSSProperties = {
     maxWidth: 600,
     maxHeight: 500, 
     padding: 5, 
-    borderRadius: 6, 
+    borderRadius: 6,
+    cursor: "pointer",
     border: "1px solid grey"
 }
 
@@ -37,29 +38,13 @@ interface State {
     isPhotoswipeOpen?: boolean;
 }
 
- var testPhotoswipeImages = [
-      {
-        src: 'http://lorempixel.com/1200/900/sports/1',
-        w: 1200,
-        h: 900,
-        title: 'Image 1'
-      },
-      {
-        src: 'http://lorempixel.com/1200/900/sports/2',
-        w: 1200,
-        h: 900,
-        title: 'Image 2'
-      },
-      {
-        src: 'http://lorempixel.com/1200/900/sports/3',
-        w: 1200,
-        h: 900,
-        title: 'Image 3'
-      }
-    ];
- var photoswipeOptions = {
-    closeOnScroll: false
-};
+const colourisingMessages = [
+    "Sending Machine Learning robots back in time..",
+    "Sciencing the hell out of it..",
+    "Applying clever things to make pretty things..",
+    "Firing up Skynet..",
+    "Machine Learning doing its thing.."
+]
 
 export class SearchPage extends React.Component<Props, State>
 {
@@ -67,6 +52,9 @@ export class SearchPage extends React.Component<Props, State>
     {
         super(props, context);
         this.state = {
+            isPhotoswipeOpen: false,
+            currentItemIndex: 0,
+            items: null
         }
     }
 
@@ -84,12 +72,16 @@ export class SearchPage extends React.Component<Props, State>
 
     resetToOriginal()
     {
-
+        var item = this.state.items[this.state.currentItemIndex];
+        item.showColourised = false;
+        this.forceUpdate();
     }
 
     colourise()
     {
         var item = this.state.items[this.state.currentItemIndex];
+        item.isColourising = true;
+        this.forceUpdate();
         axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } })
             .then(resp => {
                 console.log("Image colourised, new URL: ", resp.data.url);  
@@ -98,6 +90,7 @@ export class SearchPage extends React.Component<Props, State>
             })
             .then(() => {
                 item.showColourised = true;
+                item.isColourising = false;
                 this.forceUpdate();
             });
     }
@@ -133,11 +126,21 @@ export class SearchPage extends React.Component<Props, State>
 
     renderResults() {
         const {items, isPhotoswipeOpen} = this.state;
-        const indx = this.state.currentItemIndex;
+        const indx = this.state.currentItemIndex;        
         const term = this.props.params.term;
 
         if (items.length==0)
             return this.renderNoItems();
+
+        const item = items[indx];
+
+        var photoswipeImages = [
+        {
+            src: item.showColourised ? item.colourisedImageUrl : item.originalImageUrl,
+            w: 1200,
+            h: 900,
+            title: item.title
+        }];
 
         return <div>
             <div style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
@@ -147,7 +150,8 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             { indx !=0 ? this.renderPrevious() : null }
             { indx !=items.length-1 ? this.renderNext() : null }
-            <PhotoSwipe isOpen={isPhotoswipeOpen} items={testPhotoswipeImages} options={photoswipeOptions} />
+            <PhotoSwipe isOpen={isPhotoswipeOpen} items={photoswipeImages} options={{ }} 
+                onClose={()=> this.setState({ isPhotoswipeOpen: false })} />
             <div style={containerStyle}>
                 {this.renderItem(items[indx], indx)}
             </div>
@@ -195,9 +199,12 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             <div style={{ height: 10 }} />
             <div>
-                <Button onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
-                    { isColourised ? "Reset" : "Colourise" }
-                </Button>
+                { item.isColourising ? 
+                    colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
+                    <Button onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
+                        { isColourised ? "Reset" : "Colourise" }
+                    </Button>
+                }                
             </div>
             <div style={{ height: 20 }} />
             <p style={{ width: 400 }}>{item.description}</p>

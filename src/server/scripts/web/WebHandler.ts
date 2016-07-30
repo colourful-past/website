@@ -5,6 +5,9 @@ import { spawn } from "child_process";
 import {ISearchResult, ISearchItem, IColouriseResult} from "../../../common/Models";
 import * as axios from "axios";
 
+
+const dataSources = ["slwa", "digitalnz"];
+
 export class WebServer {
     httpServer: Server;
     app: express.Express;
