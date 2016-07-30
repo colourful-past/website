@@ -74,18 +74,20 @@ export class HomePage extends React.Component<Props, State>
                 <div style={{ height: 10 }} />
 
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
-                    <div className="form-group">
+                    <div className="homepage-search">
                         <input ref={_ => this.inputEl = _} type="text" className="form-control" style={{width: 300}} 
                             placeholder="e.g. anzac day" />
+                        <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search...</button>
                     </div>
-                    {' '}
-                    <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search...</button>
                     <div style={{ height: 10 }} />
-                    <div className="well" style={{display:"flex", maxWidth: 400}}>
+                    <div className="source-selector">
                         {dataSources.map(m => this.renderDataSourceCheck(m))}
                     </div>                   
                 </form>
 
+                <div className="attribution">
+                    based on <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> by Zhang, et. al
+                </div>
             </div>
         </div>;
     }
