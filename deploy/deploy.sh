@@ -16,7 +16,7 @@ ssh ubuntu@colourfulpast.org /bin/bash -e <<REMOTE_COMMANDS
     /usr/bin/gulp release
 
     sudo cp -f /home/ubuntu/website/deploy/nginx-config /etc/nginx/sites-available/website
-    sudo ln -s /etc/nginx/sites-available/website /etc/nginx/sites-enabled/website
+    sudo ln -sf /etc/nginx/sites-available/website /etc/nginx/sites-enabled/website
     sudo rm -f /etc/nginx/sites-enabled/default
     sudo service nginx restart
 
