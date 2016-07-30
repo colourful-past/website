@@ -39,12 +39,12 @@ interface State {
 }
 
 const colourisingMessages = [
-    "Sending Machine Learning robots back in time..",
-    "Sciencing the hell out of it..",
-    "Applying clever things to make pretty things..",
-    "Firing up Skynet..",
-    "Machine Learning doing its thing..",
-    "Powered by microservices"
+    "Sending Machine Learning robots back in time...",
+    "Sciencing the hell out of it...",
+    "Applying clever things to make pretty things...",
+    "Firing up Skynet...",
+    "Machine Learning doing its thing...",
+    "Powered by microservices!"
 ]
 
 export class SearchPage extends React.Component<Props, State>
@@ -112,7 +112,7 @@ export class SearchPage extends React.Component<Props, State>
         const isSearching = this.state.items == null;
 
         return <div>
-            <div style={containerStyle}>
+            <div className="result-body" style={containerStyle}>
                 { isSearching ? this.renderSearching() : this.renderResults() }            
             </div>
         </div>;
@@ -120,16 +120,15 @@ export class SearchPage extends React.Component<Props, State>
 
     renderSearching() {
         const term = this.props.params.term;
-        return <div style={containerStyle}>
-                <h1>Searching for "{term}"..</h1>              
-            </div>;
-            
+        setTimeout(() => {
+            document.querySelector('.result-body').classList.add('search-animation')
+        }, 600)
+        return <h1>Searching for “{term}”</h1>;            
     }
 
     renderResults() {
         const {items, isPhotoswipeOpen} = this.state;
-        const indx = this.state.currentItemIndex;        
-        const term = this.props.params.term;
+        const indx = this.state.currentItemIndex;    
 
         if (items.length==0)
             return this.renderNoItems();
@@ -145,36 +144,23 @@ export class SearchPage extends React.Component<Props, State>
         }];
 
         return <div>
-            <div style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
-                <div style={{ height: 10 }} />
-                <div>Showing "{term}" - {indx+1} of {items.length}</div>
-                <div><a href="/">Try Again</a></div>
-            </div>
-            { indx !=0 ? this.renderPrevious() : null }
-            { indx !=items.length-1 ? this.renderNext() : null }
-            <PhotoSwipe isOpen={isPhotoswipeOpen} items={photoswipeImages} options={{ }} 
-                onClose={()=> this.setState({ isPhotoswipeOpen: false })} />
-            <div style={containerStyle}>
-                {this.renderItem(items[indx], indx)}
-            </div>
+            {this.renderItem(items[indx], indx)}
         </div>
     }
 
     renderPrevious()
     {
          const indx = this.state.currentItemIndex;
-        return <div style={{ position: "absolute", top: 0, left: 20, height: "100%", justifyContent:"center", 
-                display: "flex", alignItems:"center" }}>
-                <Button onClick={() => this.setState({currentItemIndex: indx-1})}><i className="glyphicon glyphicon-triangle-left" /> Previous</Button>
+        return <div className="item-button" style={{ left: 0 }} onClick={() => this.setState({currentItemIndex: indx-1})}>
+                <div className="button"><i className="glyphicon glyphicon-triangle-left" /></div>
             </div>;
     }
 
     renderNext()
     {
          const indx = this.state.currentItemIndex;
-        return <div style={{ position: "absolute", top: 0, right: 20, height: "100%", justifyContent:"center", 
-                display: "flex", alignItems:"center" }}>
-                <Button onClick={() => this.setState({currentItemIndex: indx+1})}>Next <i className="glyphicon glyphicon-triangle-right" /></Button>
+        return <div className="item-button" style={{ right: 0 }} onClick={() => this.setState({currentItemIndex: indx+1})}>
+                <div className="button"><i className="glyphicon glyphicon-triangle-right" /></div>
             </div>;
     }
 
@@ -183,35 +169,47 @@ export class SearchPage extends React.Component<Props, State>
         const term = this.props.params.term;
         return <div style={containerStyle}>
                 <div>
-                    <h1>Whoops, no items found for "{term}". </h1>
+                    <h1>Whoops, no items found for “{term}”. </h1>
                     <h3><a href="/">Try Again</a></h3>
                 </div>                          
             </div>;
     }
 
     renderItem(item:ISearchItem, index: number) {
+        const {items, isPhotoswipeOpen} = this.state;
         const isColourised = item.showColourised;
-        console.log(item);
+        const indx = this.state.currentItemIndex;       
+        const term = this.props.params.term;     
         
-        return <div key={index} className="searchItem">            
-            <h1>{item.title}</h1>
-            <div>
-                <img style={imgStyle} src={isColourised ? item.colourisedImageUrl : item.originalImageUrl}
-                    onClick={() => this.setState({isPhotoswipeOpen: true})} />
+        return <div key={index} className="searchItem">
+            <div className="image-cover" style={{ backgroundImage: 'url(' + item.originalImageUrl + ')' }}>
+                <div className="item-new-search">
+                    <div className="search-results-description">
+                        <p>Searched for "{term}"</p>
+                        <p>{indx+1} of {items.length}</p>
+                    </div>
+                    <a className="big-button" href="/">New search</a>
+                </div>
+                <div className="colourise">
+                    { item.isColourising ? 
+                        colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
+                        <a href="#" className="big-button" onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
+                            { isColourised ? "Reset" : "Bring to life!" }
+                        </a>
+                    }
+                </div>
+                <div className="item-bottom-block">
+                    <h1 className="item-title">
+                        <span className="item-title-background">{item.title}</span>
+                    </h1>
+                    <p className="item-description">{item.description}</p>
+                    <p className="item-source">
+                        <a href={item.source_url}>Source: {item.source}</a>
+                    </p>
+                </div>
+                { indx !=0 ? this.renderPrevious() : null }
+                { indx !=items.length-1 ? this.renderNext() : null }
             </div>
-            <div style={{ height: 10 }} />
-            <div>
-                { item.isColourising ? 
-                    colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
-                    <Button onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
-                        { isColourised ? "Reset" : "Colourise" }
-                    </Button>
-                }                
-            </div>
-            <div style={{ height: 20 }} />
-            <p>{item.description}</p>
-            <div style={{ height: 20 }} />
-            <p style={{ fontStyle: "italic" }}>Source: {item.source}</p>
         </div>
     }
 }

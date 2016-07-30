@@ -69,7 +69,7 @@ export class HomePage extends React.Component<Props, State>
     render() {
         return <div style={containerStyle}>
             <div>
-                <h1>Colourful Past</h1>
+                <h1 className="welcome">Colourful Past</h1>
                 <h4>See yesterday like you captured it today</h4>
                 <div className="explanation">What part of history would you like to see?</div>
 
