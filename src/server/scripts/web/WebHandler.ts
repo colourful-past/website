@@ -3,6 +3,7 @@ import { Server, createServer } from "http";
 import { ILogger } from "extension-services";
 import { spawn } from "child_process";
 import {ISearchResult, ISearchItem, IColouriseResult} from "../../../common/Models";
+import * as axios from "axios";
 
 export class WebServer {
     httpServer: Server;
@@ -56,12 +57,18 @@ export class WebServer {
 
             var url = req.query.term;
 
-            // THIS IS OBVIOUSLY FOR DEBUG / LOCAL TESTING!!
-            setTimeout(() => {
-                var result : IColouriseResult = { url: "http://www.mikecann.co.uk/wp-content/uploads/2016/07/colour01.jpg" };
-                res.json(result);   
-            }, 1000);
-
+            if (process.env.NODE_ENV === 'production') { 
+                axios.get("http://localhost:8000/colour",{ params: { url } })
+                    .then(resp =>  res.json({ url: resp.data }));
+            }
+            else
+            {
+                // THIS IS OBVIOUSLY FOR DEBUG / LOCAL TESTING!!
+                setTimeout(() => {
+                    var result : IColouriseResult = { url: "http://www.mikecann.co.uk/wp-content/uploads/2016/07/colour01.jpg" };
+                    res.json(result);   
+                }, 1000);
+             }
         });
 
         this.app.get("*", (req, res) => {
