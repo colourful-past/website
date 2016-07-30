@@ -1,9 +1,10 @@
 export interface ISearchItem
 {
-    orginalImageUrl: string;
+    originalImageUrl: string;
     colourisedImageUrl: string;
     title: string;
     description: string;
+    source: string;
 }
 
 export interface ISearchResult

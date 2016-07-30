@@ -42,8 +42,9 @@ export class HomePage extends React.Component<Props, State>
     render() {
         return <div style={containerStyle}>
             <div>
-                <h1>Deep Learning</h1>
-                <p>To begin, simply type in some words to search for..</p>
+                <h1>Colourful Past</h1>
+                <h4>See yesterday like you captured it today</h4>
+                <div style={{ height: 10 }} />
 
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
                     <div className="form-group">
