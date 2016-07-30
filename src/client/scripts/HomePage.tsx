@@ -29,6 +29,7 @@ export class HomePage extends React.Component<Props, State>
     {
         super(props, context);
         this.state = {
+            showDataSources: false,
             selectedDataSources: dataSources.map(ds => ds.code)
         }
     }
@@ -79,7 +80,12 @@ export class HomePage extends React.Component<Props, State>
                             placeholder="e.g. anzac day" />
                         <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search...</button>
                     </div>
-                    <div className="source-selector">
+                    <div className={ this.state.showDataSources ? "show-sources" : "show-sources open" }>
+                        <a href="#" onClick={() => this.state.showDataSources ? this.setState({ showDataSources: false }) : this.setState({ showDataSources: true })}>
+                            <i className="glyphicon glyphicon-triangle-bottom"></i> Show sources
+                        </a>
+                    </div>
+                    <div className={ this.state.showDataSources ? "source-selector open" : "source-selector"}>
                         {dataSources.map(ds => this.renderDataSourceCheck(ds))}
                     </div>                   
                 </form>
