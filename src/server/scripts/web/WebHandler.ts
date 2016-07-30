@@ -37,8 +37,13 @@ export class WebServer {
             //     res.json(result);   
             // }, 1000);
 
+            var path = 'slwa.py';
+            if (process.env.NODE_ENV === 'production') { 
+                path = '/home/ubuntu/information-acquisition/slwa.py';
+            }
+
             console.log("getting data from python..");            
-            const child = spawn('py', ['slwa.py', term]);
+            const child = spawn('py', [path, term]);
             var output_string = '';
             child.stdout.on('data', (data) => {
                 output_string += data;
