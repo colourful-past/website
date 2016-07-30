@@ -178,38 +178,39 @@ export class SearchPage extends React.Component<Props, State>
     renderItem(item:ISearchItem, index: number) {
         const {items, isPhotoswipeOpen} = this.state;
         const isColourised = item.showColourised;
+        const colourUrl = item.colourisedImageUrl ? item.colourisedImageUrl : '';
         const indx = this.state.currentItemIndex;       
         const term = this.props.params.term;     
         
         return <div key={index} className="searchItem">
-            <div className="image-cover" style={{ backgroundImage: 'url(' + item.originalImageUrl + ')' }}>
-                <div className="item-new-search">
-                    <div className="search-results-description">
-                        <p>Searched for "{term}"</p>
-                        <p>{indx+1} of {items.length}</p>
-                    </div>
-                    <a className="big-button" href="/">New search</a>
+            <div className="image-cover" ref="original" style={{ backgroundImage: 'url(' + item.originalImageUrl + ')', opacity: (isColourised ? 0 : 1) }}></div>
+            <div className="image-cover" ref="colour" style={{ backgroundImage: 'url(' + colourUrl + ')', opacity: (isColourised ? 1 : 0) }}></div>
+            <div className="item-new-search">
+                <div className="search-results-description">
+                    <p>Searched for "{term}"</p>
+                    <p>{indx+1} of {items.length}</p>
                 </div>
-                <div className="colourise">
-                    { item.isColourising ? 
-                        colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
-                        <a href="#" className="big-button" onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
-                            { isColourised ? "Reset" : "Bring to life!" }
-                        </a>
-                    }
-                </div>
-                <div className="item-bottom-block">
-                    <h1 className="item-title">
-                        <span className="item-title-background">{item.title}</span>
-                    </h1>
-                    <p className="item-description">{item.description}</p>
-                    <p className="item-source">
-                        <a href={item.source_url}>Source: {item.source}</a>
-                    </p>
-                </div>
-                { indx !=0 ? this.renderPrevious() : null }
-                { indx !=items.length-1 ? this.renderNext() : null }
+                <a className="big-button" href="/">New search</a>
             </div>
+            <div className="colourise">
+                { item.isColourising ? 
+                    colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
+                    <a href="#" className="big-button" onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
+                        { isColourised ? "Reset" : "Bring to life!" }
+                    </a>
+                }
+            </div>
+            <div className="item-bottom-block">
+                <h1 className="item-title">
+                    <span className="item-title-background">{item.title}</span>
+                </h1>
+                <p className="item-description">{item.description}</p>
+                <p className="item-source">
+                    <a href={item.source_url}>Source: {item.source}</a>
+                </p>
+            </div>
+            { indx !=0 ? this.renderPrevious() : null }
+            { indx !=items.length-1 ? this.renderNext() : null }
         </div>
     }
 }
