@@ -5,6 +5,9 @@ import { spawn } from "child_process";
 import {ISearchResult, ISearchItem, IColouriseResult, dataSources} from "../../../common/Models";
 import * as axios from "axios";
 import * as _ from "underscore";
+import * as fs from "fs";
+
+const env = JSON.parse(fs.readFileSync('/home/ubuntu/keys.json', { encoding: 'utf8' }));
 
 export class WebServer {
     httpServer: Server;
@@ -91,7 +94,7 @@ export class WebServer {
             }
 
             console.log("searching source for items..", {searchTerm, source});            
-            const child = spawn(python_command, [path, searchTerm]);
+            const child = spawn(python_command, [path, searchTerm], { env });
             var output_string = '';
             child.stdout.on('data', (data) => {
                 output_string += data;
