@@ -6,8 +6,10 @@ import {ISearchResult, ISearchItem, IColouriseResult, dataSources} from "../../.
 import * as axios from "axios";
 import * as _ from "underscore";
 import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 
-const env = JSON.parse(fs.readFileSync('/home/ubuntu/keys.json', { encoding: 'utf8' }));
+const env = JSON.parse(fs.readFileSync(path.join(os.homedir(), 'keys.json'), { encoding: 'utf8' }));
 
 export class WebServer {
     httpServer: Server;
