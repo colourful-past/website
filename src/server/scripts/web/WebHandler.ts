@@ -2,7 +2,7 @@ import * as express from "express";
 import { Server, createServer } from "http";
 import { ILogger } from "extension-services";
 import { spawn } from "child_process";
-import {ISearchResult, ISearchItem, IColouriseResult, dataSources} from "../../../common/Models";
+import {ISearchResult, ISearchItem, IColouriseResult} from "../../../common/Models";
 import * as axios from "axios";
 import * as _ from "underscore";
 import * as fs from "fs";

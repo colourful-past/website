@@ -32,6 +32,12 @@ h4 {
   font-size: 30px;
 }
 
+div.explanation {
+  margin: 40px 0 10px 0;
+  font-size: 24px;
+  color: #999;
+}
+
 .homepage-search input,
 .homepage-search button {
   font-size: 30px;
@@ -48,10 +54,20 @@ h4 {
 .source-selector {
   display: flex;
   justify-content: space-around;
-  margin: 40px 0 0 0;
+  flex-wrap: wrap;
+
+  max-width: 600px;
+  margin: 50px 0 0 0;
   padding: 10px 20px;
   border: solid 1px #aaa;
   border-radius: 10px;
+}
+
+.source-checkbox {
+  width: 49%;
+  text-align: left;
+  text-indent: -15px;
+  padding-left: 20px;
 }
 
 .attribution {

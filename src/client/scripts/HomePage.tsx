@@ -29,7 +29,7 @@ export class HomePage extends React.Component<Props, State>
     {
         super(props, context);
         this.state = {
-            selectedDataSources: dataSources.slice()
+            selectedDataSources: dataSources.map(ds => ds.code)
         }
     }
 
@@ -54,14 +54,14 @@ export class HomePage extends React.Component<Props, State>
         Routes.goto(`search/${term}?sources=${sources.join(',')}`)
     }
 
-    toggleDataSource(ds:string)
+    toggleDataSource(ds_code)
     {
-        var indx = this.state.selectedDataSources.indexOf(ds);
+        var indx = this.state.selectedDataSources.indexOf(ds_code);
         var isChecked = indx != -1;
         if (isChecked)
             this.state.selectedDataSources.splice(indx, 1);
         else
-            this.state.selectedDataSources.push(ds);
+            this.state.selectedDataSources.push(ds_code);
             
         this.forceUpdate();
     }
@@ -71,7 +71,7 @@ export class HomePage extends React.Component<Props, State>
             <div>
                 <h1>Colourful Past</h1>
                 <h4>See yesterday like you captured it today</h4>
-                <div style={{ height: 10 }} />
+                <div className="explanation">What part of history would you like to see?</div>
 
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
                     <div className="homepage-search">
@@ -79,9 +79,8 @@ export class HomePage extends React.Component<Props, State>
                             placeholder="e.g. anzac day" />
                         <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search...</button>
                     </div>
-                    <div style={{ height: 10 }} />
                     <div className="source-selector">
-                        {dataSources.map(m => this.renderDataSourceCheck(m))}
+                        {dataSources.map(ds => this.renderDataSourceCheck(ds))}
                     </div>                   
                 </form>
 
@@ -92,12 +91,12 @@ export class HomePage extends React.Component<Props, State>
         </div>;
     }
 
-    renderDataSourceCheck(ds:string)
+    renderDataSourceCheck(ds)
     {
-        var isChecked = this.state.selectedDataSources.indexOf(ds) != -1;
-        return <div style={{ width: 150 }}>
+        var isChecked = this.state.selectedDataSources.indexOf(ds.code) != -1;
+        return <div className="source-checkbox">
             <label>
-                <input type="checkbox" checked={isChecked} onChange={() => this.toggleDataSource(ds)} /> { ds }
+                <input type="checkbox" checked={isChecked} onChange={() => this.toggleDataSource(ds.code)} /> { ds.name }
             </label>
         </div>;
     }
