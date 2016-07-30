@@ -1,7 +1,0 @@
-fuzzywuzzy
-requests
-flickrapi
-pandas
-python-levenshtein
-whoosh
-lxml
