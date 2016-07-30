@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import {Button, Form, FormControl, Glyphicon} from "react-bootstrap";
 import * as Routes from "./Routes";
 import * as axios from "axios";
-import {ISearchResult, ISearchItem} from "../../common/Models";
+import {ISearchResult, ISearchItem, IColouriseResult} from "../../common/Models";
 
 const containerStyle : React.CSSProperties = {
     display: "flex",
@@ -25,7 +25,6 @@ interface Props {
 interface State {
     items? : ISearchItem[];
     currentItemIndex?: number;
-    isColourised?: boolean;
 }
 
 export class SearchPage extends React.Component<Props, State>
@@ -44,6 +43,32 @@ export class SearchPage extends React.Component<Props, State>
         var resp = await axios.get<ISearchResult>("/api/search", { params: { term } });
         this.setState({items: resp.data.items, currentItemIndex: 0});
         console.log("Search result returned", resp.data)
+    }
+
+    resetToOriginal()
+    {
+
+    }
+
+    async colourise()
+    {
+        var item = this.state.items[this.state.currentItemIndex];
+        var resp = await axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } });
+        console.log("Image colourised, new URL: ", resp.data.url);        
+        await this.preloadImage(resp.data.url);
+        item.colourisedImageUrl = resp.data.url;
+        item.showColourised = true;
+        this.forceUpdate();
+    }
+
+    private async preloadImage(url:string) : Promise<void>
+    {
+        console.log("preloading image..");        
+        return new Promise<void>((resolve, reject) => {
+            var img=new Image();
+            img.onload = ()=> resolve();          
+            img.src=url;
+        });        
     }
     
     render() {
@@ -79,18 +104,30 @@ export class SearchPage extends React.Component<Props, State>
                 <div>Showing "{term}" - {indx+1} of {items.length}</div>
                 <div><a href="/">Try Again</a></div>
             </div>
-            <div style={{ position: "absolute", top: 0, left: 20, height: "100%", justifyContent:"center", 
-                display: "flex", alignItems:"center" }}>
-                <Button><i className="glyphicon glyphicon-triangle-left" /> Previous</Button>
-            </div>
-            <div style={{ position: "absolute", top: 0, right: 20, height: "100%", justifyContent:"center", 
-                display: "flex", alignItems:"center" }}>
-                <Button>Next <i className="glyphicon glyphicon-triangle-right" /></Button>
-            </div>
+            { indx !=0 ? this.renderPrevious() : null }
+            { indx !=items.length-1 ? this.renderNext() : null }    
             <div style={containerStyle}>
                 {this.renderItem(items[indx], indx)}
             </div>
         </div>
+    }
+
+    renderPrevious()
+    {
+         const indx = this.state.currentItemIndex;
+        return <div style={{ position: "absolute", top: 0, left: 20, height: "100%", justifyContent:"center", 
+                display: "flex", alignItems:"center" }}>
+                <Button onClick={() => this.setState({currentItemIndex: indx-1})}><i className="glyphicon glyphicon-triangle-left" /> Previous</Button>
+            </div>;
+    }
+
+    renderNext()
+    {
+         const indx = this.state.currentItemIndex;
+        return <div style={{ position: "absolute", top: 0, right: 20, height: "100%", justifyContent:"center", 
+                display: "flex", alignItems:"center" }}>
+                <Button onClick={() => this.setState({currentItemIndex: indx+1})}>Next <i className="glyphicon glyphicon-triangle-right" /></Button>
+            </div>;
     }
 
     renderNoItems()
@@ -105,7 +142,7 @@ export class SearchPage extends React.Component<Props, State>
     }
 
     renderItem(item:ISearchItem, index: number) {
-        const isColourised = this.state.isColourised;
+        const isColourised = item.showColourised;
         console.log(item);
         
         return <div key={index} style={{marginTop: 60}}>
@@ -115,7 +152,7 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             <div style={{ height: 10 }} />
             <div>
-                <Button onClick={() => this.setState({ isColourised: !isColourised })}>
+                <Button onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
                     { isColourised ? "Reset" : "Colourise" }
                 </Button>
             </div>
