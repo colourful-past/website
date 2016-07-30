@@ -1,0 +1,1 @@
+web: node release/server/index.js
