@@ -5,20 +5,23 @@ https://govhack-perth-2016.herokuapp.com/
 
 ## To Install
 
-npm install
-npm install -g tsd
-tsd install
+`npm install`
+
+`npm install -g tsd`
+
+`tsd install`
+
 
 ## To Run (Dev)
 
-gulp
+`gulp`
 
 open browser to http://localhost:3000
 
 ## To Build Release
 
-gulp release
+`gulp release`
 
 ## To Publish to Heroku
 
-git push heroku master
+`git push heroku master`
