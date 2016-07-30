@@ -73,6 +73,9 @@
     },
     "axios/axios.d.ts": {
       "commit": "ce71f72bcec4d09702b969d6743b52d9780a661f"
+    },
+    "photoswipe/photoswipe.d.ts": {
+      "commit": "2a24bbb7ca4f13e52c7f6a0ab6144b565bf1ef55"
     }
   }
 }

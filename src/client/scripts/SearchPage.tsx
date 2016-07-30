@@ -4,6 +4,7 @@ import {Button, Form, FormControl, Glyphicon} from "react-bootstrap";
 import * as Routes from "./Routes";
 import * as axios from "axios";
 import {ISearchResult, ISearchItem, IColouriseResult} from "../../common/Models";
+import {PhotoSwipe} from "react-photoswipe";
 
 const containerStyle : React.CSSProperties = {
     display: "flex",
@@ -12,6 +13,14 @@ const containerStyle : React.CSSProperties = {
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center"
+}
+
+const imgStyle : React.CSSProperties = {
+    maxWidth: 400,
+    maxHeight: 400, 
+    padding: 5, 
+    borderRadius: 6, 
+    border: "1px solid grey"
 }
 
 interface RouteParams {
@@ -25,7 +34,32 @@ interface Props {
 interface State {
     items? : ISearchItem[];
     currentItemIndex?: number;
+    isPhotoswipeOpen?: boolean;
 }
+
+ var testPhotoswipeImages = [
+      {
+        src: 'http://lorempixel.com/1200/900/sports/1',
+        w: 1200,
+        h: 900,
+        title: 'Image 1'
+      },
+      {
+        src: 'http://lorempixel.com/1200/900/sports/2',
+        w: 1200,
+        h: 900,
+        title: 'Image 2'
+      },
+      {
+        src: 'http://lorempixel.com/1200/900/sports/3',
+        w: 1200,
+        h: 900,
+        title: 'Image 3'
+      }
+    ];
+ var photoswipeOptions = {
+    closeOnScroll: false
+};
 
 export class SearchPage extends React.Component<Props, State>
 {
@@ -77,7 +111,7 @@ export class SearchPage extends React.Component<Props, State>
 
         return <div>
             <div style={containerStyle}>
-                { isSearching ? this.renderSearching() : this.renderResults() }                
+                { isSearching ? this.renderSearching() : this.renderResults() }            
             </div>
         </div>;
     }
@@ -91,7 +125,7 @@ export class SearchPage extends React.Component<Props, State>
     }
 
     renderResults() {
-        const items = this.state.items;
+        const {items, isPhotoswipeOpen} = this.state;
         const indx = this.state.currentItemIndex;
         const term = this.props.params.term;
 
@@ -105,7 +139,8 @@ export class SearchPage extends React.Component<Props, State>
                 <div><a href="/">Try Again</a></div>
             </div>
             { indx !=0 ? this.renderPrevious() : null }
-            { indx !=items.length-1 ? this.renderNext() : null }    
+            { indx !=items.length-1 ? this.renderNext() : null }
+            <PhotoSwipe isOpen={isPhotoswipeOpen} items={testPhotoswipeImages} options={photoswipeOptions} />
             <div style={containerStyle}>
                 {this.renderItem(items[indx], indx)}
             </div>
@@ -147,8 +182,9 @@ export class SearchPage extends React.Component<Props, State>
         
         return <div key={index} style={{marginTop: 60}}>
             <h1>{item.title}</h1>
-            <div style={{ padding: 5, borderRadius: 6, border: "1px solid grey"}}>
-                <img width={400} src={isColourised ? item.colourisedImageUrl : item.originalImageUrl} />
+            <div>
+                <img style={imgStyle} src={isColourised ? item.colourisedImageUrl : item.originalImageUrl}
+                    onClick={() => this.setState({isPhotoswipeOpen: true})} />
             </div>
             <div style={{ height: 10 }} />
             <div>

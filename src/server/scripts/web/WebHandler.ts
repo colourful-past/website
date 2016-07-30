@@ -62,9 +62,6 @@ export class WebServer {
                 res.json(result);   
             }, 1000);
 
-
-
-
         });
 
         this.app.get("*", (req, res) => {
