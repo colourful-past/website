@@ -32,3 +32,4 @@ do
         sudo service website restart
 
 REMOTE_COMMANDS
+done
