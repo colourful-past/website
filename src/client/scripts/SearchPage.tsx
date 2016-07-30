@@ -16,8 +16,8 @@ const containerStyle : React.CSSProperties = {
 }
 
 const imgStyle : React.CSSProperties = {
-    maxWidth: 400,
-    maxHeight: 400, 
+    maxWidth: 600,
+    maxHeight: 500, 
     padding: 5, 
     borderRadius: 6, 
     border: "1px solid grey"
@@ -70,13 +70,16 @@ export class SearchPage extends React.Component<Props, State>
         }
     }
 
-    async componentDidMount()
+    componentDidMount()
     {
+        console.log("Opening search page with props..", this.props);        
         const term = this.props.params.term;
         console.log("Searching the api...", { term });
-        var resp = await axios.get<ISearchResult>("/api/search", { params: { term } });
-        this.setState({items: resp.data.items, currentItemIndex: 0});
-        console.log("Search result returned", resp.data)
+        axios.get<ISearchResult>("/api/search", { params: { term } })
+            .then(resp => {
+                this.setState({items: resp.data.items, currentItemIndex: 0});
+                console.log("Search result returned", resp.data)
+            });        
     }
 
     resetToOriginal()
@@ -84,18 +87,22 @@ export class SearchPage extends React.Component<Props, State>
 
     }
 
-    async colourise()
+    colourise()
     {
         var item = this.state.items[this.state.currentItemIndex];
-        var resp = await axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } });
-        console.log("Image colourised, new URL: ", resp.data.url);        
-        await this.preloadImage(resp.data.url);
-        item.colourisedImageUrl = resp.data.url;
-        item.showColourised = true;
-        this.forceUpdate();
+        axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } })
+            .then(resp => {
+                console.log("Image colourised, new URL: ", resp.data.url);  
+                item.colourisedImageUrl = resp.data.url;      
+                return this.preloadImage(resp.data.url)
+            })
+            .then(() => {
+                item.showColourised = true;
+                this.forceUpdate();
+            });
     }
 
-    private async preloadImage(url:string) : Promise<void>
+    private preloadImage(url:string) : Promise<void>
     {
         console.log("preloading image..");        
         return new Promise<void>((resolve, reject) => {
