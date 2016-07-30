@@ -63,7 +63,7 @@ export class WebServer {
             var url = req.query.term;
 
             if (process.env.NODE_ENV === 'production') { 
-                axios.get("http://localhost:8000/colour",{ params: { url } })
+                axios.get("http://localhost:8000/colour?url="+encodeURIComponent(url))
                     .then(resp =>  res.json({ url: resp.data }));
             }
             else
