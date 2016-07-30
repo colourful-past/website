@@ -60,10 +60,13 @@ export class WebServer {
 
          this.app.get("/api/colourise", (req, res) => {
 
-            var url = req.query.term;
+            var url = req.query.url;
+
+            console.log("attempting to colourise", {url});
+            
 
             if (process.env.NODE_ENV === 'production') { 
-                axios.get("http://localhost:8000/colour?url="+encodeURIComponent(url))
+                axios.get("http://localhost:8000/colour", { params: { url }})
                     .then(resp =>  res.json({ url: resp.data }));
             }
             else
