@@ -1,5 +1,6 @@
 upstream node_website {
-  server 127.0.0.1:3000;
+  server 10.0.32.158:3000;
+  server 10.0.32.126:3000;  
 }
 
 server {
