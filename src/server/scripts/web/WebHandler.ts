@@ -2,11 +2,9 @@ import * as express from "express";
 import { Server, createServer } from "http";
 import { ILogger } from "extension-services";
 import { spawn } from "child_process";
-import {ISearchResult, ISearchItem, IColouriseResult} from "../../../common/Models";
+import {ISearchResult, ISearchItem, IColouriseResult, dataSources} from "../../../common/Models";
 import * as axios from "axios";
-
-
-const dataSources = ["slwa", "digitalnz"];
+import * as _ from "underscore";
 
 export class WebServer {
     httpServer: Server;
@@ -21,8 +19,9 @@ export class WebServer {
 
         this.app.get("/api/search", (req, res) => {
 
-            var term = req.query.term;
-            console.log("beginning search", {term});
+            var term : string = req.query.term;
+            var sources : string[] = req.query.sources;
+            console.log("beginning search", {term, sources});
 
             // THIS IS OBVIOUSLY FOR DEBUG / LOCAL TESTING!!
             // setTimeout(() => {
@@ -40,27 +39,17 @@ export class WebServer {
             //     res.json(result);   
             // }, 1000);
 
-            var path = 'slwa.py';
-            var python_command = 'py';
-
-            if (process.env.NODE_ENV === 'production') {
-                python_command = '/usr/bin/python';
-                path = '/home/ubuntu/information-acquisition/slwa.py';
-            }
-
-            console.log("getting data from python..");            
-            const child = spawn(python_command, [path, term]);
-            var output_string = '';
-            child.stdout.on('data', (data) => {
-                output_string += data;
-            });
-            child.on('close', (code) => {
-                //console.log(output_string)
-                var items : ISearchItem[] = JSON.parse(output_string);
-                console.log(items.length+" items, returning 5 of them");
-                items = items.slice(0, 5);
-                res.json({items});
-            });
+            var promises = sources.map(s => this.loadItems(term, s));
+            Promise.all(promises)
+                .then(sourceItems => {
+                    console.log("got all source's items", {sourceItems});
+                    sourceItems = sourceItems.map(items => items.slice(0, 5));
+                    var allItems = _.flatten(sourceItems);
+                    console.log("flattened items", {allItems});
+                    allItems = _.shuffle(allItems);
+                    console.log("shuffled items", {allItems});
+                    res.json({ items: allItems });
+                })
 
         });
 
@@ -87,6 +76,32 @@ export class WebServer {
 
         this.app.get("*", (req, res) => {
             res.sendFile(__dirname + '/public/index.html');
+        });
+    }
+
+    loadItems(searchTerm:string, source:string) : Promise<ISearchItem[]>
+    {
+        return new Promise<ISearchItem[]>((resolve, reject) => {
+            var path = source+'.py';
+            var python_command = 'python';
+
+            if (process.env.NODE_ENV === 'production') {
+                python_command = '/usr/bin/python';
+                path = `/home/ubuntu/information-acquisition/${source}.py`;
+            }
+
+            console.log("searching source for items..", {searchTerm, source});            
+            const child = spawn(python_command, [path, searchTerm]);
+            var output_string = '';
+            child.stdout.on('data', (data) => {
+                output_string += data;
+            });
+            child.on('close', (code) => {
+                console.log(source, " =====> ", output_string)
+                var items : ISearchItem[] = JSON.parse(output_string);
+                console.log(`Found ${items.length} items for source ${source}`);
+                resolve(items);                
+            });
         });
     }
 

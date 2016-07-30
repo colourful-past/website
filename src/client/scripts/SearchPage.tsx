@@ -16,7 +16,6 @@ const containerStyle : React.CSSProperties = {
 }
 
 const imgStyle : React.CSSProperties = {
-    maxWidth: 600,
     maxHeight: 500, 
     padding: 5, 
     borderRadius: 6,
@@ -25,11 +24,12 @@ const imgStyle : React.CSSProperties = {
 }
 
 interface RouteParams {
-    term: string;
+    term: string;    
 }
 
 interface Props {
     params: RouteParams;
+    location: { query: { sources:string } };
 }
 
 interface State {
@@ -43,7 +43,8 @@ const colourisingMessages = [
     "Sciencing the hell out of it..",
     "Applying clever things to make pretty things..",
     "Firing up Skynet..",
-    "Machine Learning doing its thing.."
+    "Machine Learning doing its thing..",
+    "Powered by microservices"
 ]
 
 export class SearchPage extends React.Component<Props, State>
@@ -62,8 +63,9 @@ export class SearchPage extends React.Component<Props, State>
     {
         console.log("Opening search page with props..", this.props);        
         const term = this.props.params.term;
+        const sources = this.props.location.query.sources.split(",");
         console.log("Searching the api...", { term });
-        axios.get<ISearchResult>("/api/search", { params: { term } })
+        axios.get<ISearchResult>("/api/search", { params: { term, sources } })
             .then(resp => {
                 this.setState({items: resp.data.items, currentItemIndex: 0});
                 console.log("Search result returned", resp.data)
@@ -191,7 +193,7 @@ export class SearchPage extends React.Component<Props, State>
         const isColourised = item.showColourised;
         console.log(item);
         
-        return <div key={index} style={{marginTop: 60}}>
+        return <div key={index} className="searchItem">            
             <h1>{item.title}</h1>
             <div>
                 <img style={imgStyle} src={isColourised ? item.colourisedImageUrl : item.originalImageUrl}
@@ -207,7 +209,7 @@ export class SearchPage extends React.Component<Props, State>
                 }                
             </div>
             <div style={{ height: 20 }} />
-            <p style={{ width: 400 }}>{item.description}</p>
+            <p>{item.description}</p>
             <div style={{ height: 20 }} />
             <p style={{ fontStyle: "italic" }}>Source: {item.source}</p>
         </div>

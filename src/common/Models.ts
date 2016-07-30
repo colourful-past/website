@@ -18,3 +18,5 @@ export interface IColouriseResult
 {
     url: string;
 }
+
+export const dataSources = ["slwa", "digitalnz", "flickr_search"];

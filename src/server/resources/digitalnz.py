@@ -10,7 +10,7 @@ def search(query):
     params = [
         ('text', query),
         ('and[category][]', 'Images'),
-        ('api_key', os.environ['DIGITAL_NZ_API_KEY'])
+        ('api_key', 'HWa3RRoCCNLH6EU8HzpK')
     ]
 
     for decade in range(1900, 1960, 10):
@@ -25,7 +25,7 @@ def search(query):
     search = res['search']
 
     for result in search['results']:
-        if 'All rights reserved' not in result['Usage']:
+        if 'All rights reserved' not in result['usage']:
             result = {
                 "title": result['title'],
                 "description": result['description'],
