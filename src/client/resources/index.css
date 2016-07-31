@@ -132,7 +132,7 @@ h1.searching img {
   left: 0;
   width: 100%;
 
-  transition: transform 40s linear 2s;
+  transition: transform 40s linear 0.8s;
 }
 
 h1.searching img.spinner-animation {
@@ -286,8 +286,7 @@ a.big-button:hover {
   position: absolute;
   bottom: 40px;
   left: 20px;
-  width: 100%;
-
+  right: 20px;
 }
 
 .item-title {
