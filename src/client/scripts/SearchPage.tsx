@@ -259,7 +259,7 @@ export class SearchPage extends React.Component<Props, State>
                     <p>Searched for "{term}"</p>
                     <p>{indx+1} of {items.length}</p>
                 </div>
-                <a className="big-button" href="/">New search</a>
+                <a className="big-button" href="#" onClick={() => Routes.goto("/")}>New search</a>
             </div>
             <div className="colourise">
                 { item.isColourising ? 
