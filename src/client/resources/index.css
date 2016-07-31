@@ -73,6 +73,10 @@ div.explanation {
   border-color: #aaa;
 }
 
+.toggle-sources {
+  margin-top: 10px;
+}
+
 .show-sources {
   transition: height 0.5s ease 0s;
 

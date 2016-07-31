@@ -54,16 +54,24 @@ export class HomePage extends React.Component<Props, State>
         Routes.goto(`search/${term}?sources=${sources.join(',')}`)
     }
 
-    toggleDataSource(ds_code)
+    toggleDataSource(dataSourceCode:string)
     {
-        var indx = this.state.selectedDataSources.indexOf(ds_code);
+        var indx = this.state.selectedDataSources.indexOf(dataSourceCode);
         var isChecked = indx != -1;
         if (isChecked)
             this.state.selectedDataSources.splice(indx, 1);
         else
-            this.state.selectedDataSources.push(ds_code);
+            this.state.selectedDataSources.push(dataSourceCode);
             
         this.forceUpdate();
+    }
+
+    toggleAllDataSources()
+    {
+        if (this.state.selectedDataSources.length == dataSources.length)
+            this.setState({selectedDataSources: []});
+        else
+            this.setState({selectedDataSources: dataSources.map(ds => ds.code)})
     }
 
     render() {
@@ -85,6 +93,7 @@ export class HomePage extends React.Component<Props, State>
                     </div>
                     <div className={ this.state.showDataSources ? "source-selector open" : "source-selector"}>
                         {dataSources.map(ds => this.renderDataSourceCheck(ds))}
+                        <a className="toggle-sources" href="#" onClick={() => this.toggleAllDataSources()}>Toggle</a>
                     </div>                   
                 </form>
 
