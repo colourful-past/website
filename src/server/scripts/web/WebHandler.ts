@@ -101,15 +101,27 @@ export class WebServer {
 
             console.log("searching source for items..", {searchTerm, source});            
             const child = spawn(python_command, [path, searchTerm], { env: keys });
-            var output_string = '';
+            var stdoutStr = '';
+            var stderrStr = '';
             child.stdout.on('data', (data) => {
-                output_string += data;
+                stdoutStr += data;
+            });
+            child.stderr.on('data', (data) => {
+                stderrStr += data;
             });
             child.on('close', (code) => {
-                console.log(source, " =====> ", output_string)
-                var items : ISearchItem[] = JSON.parse(output_string);
-                console.log(`Found ${items.length} items for source ${source}`);
-                resolve(items);                
+                if (stderrStr)
+                {
+                    console.error(source, "ERROR", stderrStr);
+                    resolve([]);
+                }
+                else
+                {
+                    console.log(source, "COMPLETE", stdoutStr)
+                    var items : ISearchItem[] = JSON.parse(stdoutStr);
+                    console.log(`Found ${items.length} items for source ${source}`);
+                    resolve(items);   
+                }
             });
         });
     }
