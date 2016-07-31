@@ -79,6 +79,39 @@ export class SearchPage extends React.Component<Props, State>
             });        
     }
 
+    keypressHandler(e)
+    {
+        const {items, isPhotoswipeOpen} = this.state;
+        const indx = this.state.currentItemIndex;       
+
+        if (e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 33) {
+            if (indx > 0) {
+                this.setCurrentItemIndex(indx-1);
+            }
+        }
+        if (e.keyCode == 39 || e.keyCode == 40 || e.keyCode == 34) {
+            if (indx + 1 < items.length) {
+                this.setCurrentItemIndex(indx+1);
+            }
+        }
+        if (e.keyCode == 32 || e.keyCode == 13) {
+            this.colourise();
+        }
+    },
+
+    componentWillMount()
+    {
+        this.currentKeypressHandler = this.keypressHandler.bind(this);
+        document.addEventListener("keydown", this.currentKeypressHandler, false);
+    },
+
+    componentWillUnmount()
+    {
+        if (this.currentKeypressHandler) {
+            document.removeEventListener("keydown", this.currentKeypressHandler, false);
+        }
+    },
+
     setCurrentItemIndex(indx:number)
     {
         var item = this.state.items[indx];
