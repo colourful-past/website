@@ -2,3 +2,4 @@
 **/bower_components/
 typings
 dist
+src/server/resources/keys.json

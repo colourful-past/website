@@ -8,8 +8,9 @@ import * as _ from "underscore";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import { default as keys } from "../keys";
 
-const env = JSON.parse(fs.readFileSync(path.join(os.homedir(), 'keys.json'), { encoding: 'utf8' }));
+//const env = JSON.parse(fs.readFileSync(path.join(os.homedir(), 'keys.json'), { encoding: 'utf8' }));
 
 export class WebServer {
     httpServer: Server;
@@ -43,6 +44,9 @@ export class WebServer {
             //     }
             //     res.json(result);   
             // }, 1000);
+
+            console.log("KEYS..", keys);
+            
 
             var promises = sources.map(s => this.loadItems(term, s));
             Promise.all(promises)
@@ -96,7 +100,7 @@ export class WebServer {
             }
 
             console.log("searching source for items..", {searchTerm, source});            
-            const child = spawn(python_command, [path, searchTerm], { env });
+            const child = spawn(python_command, [path, searchTerm], { env: keys });
             var output_string = '';
             child.stdout.on('data', (data) => {
                 output_string += data;
