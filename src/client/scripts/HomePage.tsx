@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import {Button, Form, FormControl, Well} from "react-bootstrap";
 import * as Routes from "./Routes";
 import {dataSources} from "../../common/Models";
+import {SearchBar} from "./SearchBar";
 
 const containerStyle : React.CSSProperties = {
     display: "flex",
@@ -19,18 +20,18 @@ interface Props {
 
 interface State {
     selectedDataSources?: string[];
-    showDataSources: boolean;
+    showDataSources?: boolean;
+    searchTerm?: string;
 }
 
 export class HomePage extends React.Component<Props, State>
 {
-    private inputEl : HTMLInputElement;
-
     constructor(props:Props, context?:any)
     {
         super(props, context);
         this.state = {
             showDataSources: false,
+            searchTerm: "",
             selectedDataSources: dataSources.map(ds => ds.code)
         }
     }
@@ -45,14 +46,11 @@ export class HomePage extends React.Component<Props, State>
         e.preventDefault();
 
         var sources = this.state.selectedDataSources;
+        var term = this.state.searchTerm;
         
-        if (sources.length==0)
+        if (sources.length==0 || !term)
             return;
         
-        var term = this.inputEl.value;
-        if (!term)
-            return;
-
         Routes.goto(`search/${term}?sources=${sources.join(',')}`)
     }
 
@@ -77,8 +75,7 @@ export class HomePage extends React.Component<Props, State>
 
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
                     <div className="homepage-search">
-                        <input ref={_ => this.inputEl = _} type="text" className="form-control" style={{width: 300}} 
-                            placeholder="e.g. anzac day" />
+                        <SearchBar onSearchTermChanged={t => this.setState({ searchTerm: t })} />                        
                         <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search</button>
                     </div>
                     <div className={ this.state.showDataSources ? "show-sources" : "show-sources open" }>
