@@ -75,6 +75,7 @@ export class HomePage extends React.Component<Props, State>
     }
 
     render() {
+        var searchTerm = this.state.searchTerm;
         return <div style={containerStyle}>
             <div>
                 <h1 className="welcome">Colourful Past</h1>
@@ -84,7 +85,7 @@ export class HomePage extends React.Component<Props, State>
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
                     <div className="homepage-search">
                         <SearchBar onSearchTermChanged={t => this.setState({ searchTerm: t })} />                        
-                        <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search</button>
+                        <button type="submit" disabled={this.state.selectedDataSources.length==0 || !searchTerm} className="btn btn-default">Search</button>
                     </div>
                     <div className={ this.state.showDataSources ? "show-sources" : "show-sources open" }>
                         <a href="#" onClick={() => this.state.showDataSources ? this.setState({ showDataSources: false }) : this.setState({ showDataSources: true })}>
