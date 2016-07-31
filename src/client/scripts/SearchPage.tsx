@@ -48,7 +48,8 @@ const colourisingMessages = [
     "The cake is a lie.",
     "Powered by determination and croissants..",
     "Colour all the things..",
-    "Rewriting everything in Malbolge.."
+    "Rewriting everything in Malbolge..",
+    "Gotta colour 'em all!"
 ]
 
 export class SearchPage extends React.Component<Props, State>
