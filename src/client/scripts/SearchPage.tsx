@@ -238,11 +238,11 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             <div className="item-bottom-block">
                 <h1 className="item-title">
-                    <a href={item.source_url} className="item-title-background">{item.title}</a>
+                    <a href={item.source_url} target="_blank" className="item-title-background">{item.title}</a>
                 </h1>
                 <p className="item-description">{item.description}</p>
                 <p className="item-source">
-                    <a href={item.source_url}>Source: {item.source}</a>
+                    <a href={item.source_url} target="_blank">Source: {item.source}</a>
                 </p>
             </div>
             { indx !=0 ? this.renderPrevious() : null }
