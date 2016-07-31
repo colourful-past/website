@@ -23,7 +23,7 @@ export interface IColouriseResult
 export const dataSources = [
   {
     code: "slwa",
-    name: "Western Australia (SLWA)"
+    name: "WA (State Library)"
   },
   {
     code: "digitalnz",
