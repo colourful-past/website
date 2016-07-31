@@ -92,6 +92,7 @@ export class HomePage extends React.Component<Props, State>
                 </form>
 
                 <div className="attribution">
+                    <a href="http://wa.govhack.org/">GovHack Perth 2016</a>&nbsp;&middot;
                     based on <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> by Zhang, et. al
                 </div>
             </div>
