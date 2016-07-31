@@ -114,6 +114,36 @@ div.explanation {
   color: #fff;
 }
 
+h1.searching {
+  text-align: center;
+}
+
+h1.searching .spinner-image-block {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+}
+
+h1.searching img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  transition: transform 40s linear 2s;
+}
+
+h1.searching img.spinner-animation {
+  transform: rotate(-1800deg);
+}
+
+h1.searching img.hands {
+  /*top: 2px;*/
+  /*left: -3px;*/
+}
+
 /*******
  * Search results / image display
  */

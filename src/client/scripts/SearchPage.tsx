@@ -127,8 +127,15 @@ export class SearchPage extends React.Component<Props, State>
         const term = this.props.params.term;
         setTimeout(() => {
             document.querySelector('.result-body').classList.add('search-animation')
+            document.querySelector('h1.searching img.arrow').classList.add('spinner-animation')
         }, 600)
-        return <h1>Searching for “{term}”</h1>;            
+        return <h1 className="searching">
+            <div className="spinner-image-block">
+                <img src="/colour-arrow.png" className="arrow" />
+                <img src="/colour-hands.png" className="hands" />
+            </div>
+            Searching for “{term}”
+        </h1>;            
     }
 
     renderResults() {
