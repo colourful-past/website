@@ -23,6 +23,8 @@ do
         tsd install
         /usr/bin/gulp release
 
+        cp ~/keys.json release/server/
+
         sudo cp -f /home/ubuntu/website/deploy/nginx-config /etc/nginx/sites-available/website
         sudo ln -sf /etc/nginx/sites-available/website /etc/nginx/sites-enabled/website
         sudo rm -f /etc/nginx/sites-enabled/default
