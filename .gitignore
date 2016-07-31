@@ -4,3 +4,7 @@ typings
 dist
 src/server/resources/keys.json
 release/server/resources/keys.json
+src/server/resources/requirements.txt
+src/server/resources/*.py
+release/server/resources/requirements.txt
+release/server/resources/*.py
