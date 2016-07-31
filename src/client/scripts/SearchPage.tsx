@@ -55,6 +55,8 @@ const colourisingMessages = [
 
 export class SearchPage extends React.Component<Props, State>
 {
+    private currentKeypressHandler : () => void;
+
     constructor(props:Props, context?:any)
     {
         super(props, context);
@@ -97,20 +99,20 @@ export class SearchPage extends React.Component<Props, State>
         if (e.keyCode == 32 || e.keyCode == 13) {
             this.colourise();
         }
-    },
+    }
 
     componentWillMount()
-    {
+    {        
         this.currentKeypressHandler = this.keypressHandler.bind(this);
         document.addEventListener("keydown", this.currentKeypressHandler, false);
-    },
+    }
 
     componentWillUnmount()
     {
         if (this.currentKeypressHandler) {
             document.removeEventListener("keydown", this.currentKeypressHandler, false);
         }
-    },
+    }
 
     setCurrentItemIndex(indx:number)
     {
