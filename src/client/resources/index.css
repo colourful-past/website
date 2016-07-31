@@ -320,3 +320,88 @@ a.big-button:hover {
 .item-source a:hover {
   color: #f0f0ff;
 }
+
+
+/*******
+ * Search results / image display
+ */
+
+@media (max-width: 400px) {
+  .hide-on-mobile { display: none; }
+
+  h1.welcome {
+    font-size: 64px;
+    line-height: 80px;
+  }
+
+  h4 {
+    font-size: 24px;
+  }
+
+  div.explanation {
+    font-size: 18px;
+  }
+
+  div.homepage-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  div.homepage-search button {
+    margin-top: 15px;
+    margin-left: 0;
+  }
+
+  div.show-sources {
+    display: none;
+  }
+
+  .search-results-description {
+    display: none;
+  }
+
+  .item-description, .item-source {
+    display: none;
+  }
+
+  .colourise {
+    top: 20px;
+    right: 20px;
+    width: 48%;
+    font-size: 18px;
+  }
+
+  .item-button, .item-new-search, .item-bottom-block {
+    opacity: 1 !important;
+  }
+
+  .item-title {
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .item-button {
+    top: initial;
+    bottom: 0px;
+    height: 200px;
+    font-size: 40px;
+  }
+
+  .item-button .button {
+    margin: 10px 0;
+  }
+}
+
+
+/*******
+ * Tablet
+ */
+
+@media (max-width: 1000px) {
+}
+
+
+
+

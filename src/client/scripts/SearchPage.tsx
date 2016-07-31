@@ -245,7 +245,7 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             <div className="item-bottom-block">
                 <h1 className="item-title">
-                    <span className="item-title-background">{item.title}</span>
+                    <a href={item.source_url} className="item-title-background">{item.title}</a>
                 </h1>
                 <p className="item-description">{item.description}</p>
                 <p className="item-source">
