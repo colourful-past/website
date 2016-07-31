@@ -79,8 +79,8 @@ export class HomePage extends React.Component<Props, State>
         return <div style={containerStyle}>
             <div>
                 <h1 className="welcome">Colourful Past</h1>
-                <h4>See yesterday like you captured it today</h4>
-                <div className="explanation">What part of history would you like to see?</div>
+                <h4>Experience history in rich colour!</h4>
+                <div className="explanation">What memory would you like to see?</div>
 
                 <form className="form-inline" onSubmit={e => this.onSubmit(e)}>
                     <div className="homepage-search">
