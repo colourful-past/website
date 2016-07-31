@@ -79,7 +79,7 @@ export class HomePage extends React.Component<Props, State>
                     <div className="homepage-search">
                         <input ref={_ => this.inputEl = _} type="text" className="form-control" style={{width: 300}} 
                             placeholder="e.g. anzac day" />
-                        <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search...</button>
+                        <button type="submit" disabled={this.state.selectedDataSources.length==0} className="btn btn-default">Search</button>
                     </div>
                     <div className={ this.state.showDataSources ? "show-sources" : "show-sources open" }>
                         <a href="#" onClick={() => this.state.showDataSources ? this.setState({ showDataSources: false }) : this.setState({ showDataSources: true })}>
