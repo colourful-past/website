@@ -112,16 +112,27 @@ export class WebServer {
             child.on('close', (code) => {
                 if (stderrStr)
                 {
-                    console.error(source, "ERROR", stderrStr);
-                    resolve([]);
+                     console.log(source, "stderr", stderrStr);
                 }
-                else
+                // if (stderrStr)
+                // {
+                //     console.error(source, "ERROR", stderrStr);
+                //     resolve([]);
+                // }
+                // else
+                // {
+                try
                 {
-                    console.log(source, "COMPLETE", stdoutStr)
+                    console.log(source, "stdout", stdoutStr)
                     var items : ISearchItem[] = JSON.parse(stdoutStr);
                     console.log(`Found ${items.length} items for source ${source}`);
                     resolve(items);   
                 }
+                catch(err)
+                {
+                        resolve([]);   
+                }
+                //}
             });
         });
     }
