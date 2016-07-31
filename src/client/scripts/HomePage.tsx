@@ -19,6 +19,7 @@ interface Props {
 
 interface State {
     selectedDataSources?: string[];
+    showDataSources: boolean;
 }
 
 export class HomePage extends React.Component<Props, State>

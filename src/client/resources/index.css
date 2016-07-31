@@ -239,6 +239,7 @@ a.big-button:hover {
   /* background: rgba(33,33,33,0.8); */
   max-width: 500px;
   text-align: right;
+  text-shadow: 1px 1px #333;
 }
 
 .searchItem:hover .item-bottom-block {
