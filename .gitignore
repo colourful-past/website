@@ -3,3 +3,4 @@
 typings
 dist
 src/server/resources/keys.json
+release/server/resources/keys.json
