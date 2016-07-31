@@ -19,6 +19,15 @@ h1.welcome {
 
   background-image: gradient( linear, left top, right top, color-stop(0, #1f77b4), color-stop(0.15, #17becf), color-stop(0.3, #9467bd), color-stop(0.45, #e377c2), color-stop(0.6, #d62728),color-stop(0.75, #ff7f0e), color-stop(0.9, #bcbd22), color-stop(1, #2ca02c) );
   background-clip: text;
+
+  animation: AnimationName 15s ease infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes AnimationName { 
+  0% {background-position:0% 50%}
+  50% {background-position:100% 50%}
+  100% {background-position:0% 50%}
 }
 
 h4 {
@@ -354,6 +363,8 @@ a.big-button:hover {
   .hide-on-mobile { display: none; }
 
   h1.welcome {
+    margin-top: 20px;
+    padding-top: 30px;
     font-size: 64px;
     line-height: 80px;
   }
@@ -404,6 +415,7 @@ a.big-button:hover {
   .item-title {
     font-size: 40px;
     line-height: 50px;
+    margin: 0 auto 0 auto;
   }
 
   .item-button {
