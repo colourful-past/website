@@ -8,6 +8,8 @@ export interface ISearchItem
     source: string;
     source_url: string;
     isColourising?: boolean;
+    isPreloaded?: boolean;
+    colourisePromise?: Promise<void>;
 }
 
 export interface ISearchResult

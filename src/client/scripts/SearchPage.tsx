@@ -72,13 +72,24 @@ export class SearchPage extends React.Component<Props, State>
         console.log("Searching the api...", { term });
         axios.get<ISearchResult>("/api/search", { params: { term, sources } })
             .then(resp => {
-                this.setState({items: resp.data.items, currentItemIndex: 0});
-                console.log("Search result returned", resp.data)
+                console.log("Search result returned", resp.data);
+                this.setState({items: resp.data.items});
+                this.setCurrentItemIndex(0);
             });        
+    }
+
+    setCurrentItemIndex(indx:number)
+    {
+        var item = this.state.items[indx];
+        console.log("Current item index set", {indx, item});
+        this.setState({currentItemIndex: indx});
+        if (!item.colourisedImageUrl && !item.colourisePromise)
+            item.colourisePromise = this.precolouriseAndPreload(item);
     }
 
     resetToOriginal()
     {
+        console.log("resetting to original");        
         var item = this.state.items[this.state.currentItemIndex];
         item.showColourised = false;
         this.forceUpdate();
@@ -86,36 +97,56 @@ export class SearchPage extends React.Component<Props, State>
 
     colourise()
     {
+        console.log("colourising..");        
         var item = this.state.items[this.state.currentItemIndex];
         item.isColourising = true;
         this.forceUpdate();
-        axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } })
+        this.wait(1500)
+            .then(() => item.colourisePromise)
+            .then(() => {                
+                item.isColourising = false;
+                item.showColourised = true;
+                this.forceUpdate();
+            });
+    }
+
+    private wait(ms:number) : Promise<void>
+    {
+        console.log("waiting", {ms});
+        return new Promise<void>((resolve, reject) =>{
+            setTimeout(() => resolve(), ms);
+        })
+    }
+
+    private precolouriseAndPreload(item:ISearchItem) : Promise<void>
+    {
+        console.log("precolouriseAndPreload", {item});
+         return axios.get<IColouriseResult>("/api/colourise", { params: { url: item.originalImageUrl } })
             .then(resp => {
                 console.log("Image colourised, new URL: ", resp.data.url);  
                 item.colourisedImageUrl = resp.data.url;      
                 return this.preloadImage(resp.data.url)
             })
             .then(() => {
-                item.showColourised = true;
-                item.isColourising = false;
-                this.forceUpdate();
+                item.isPreloaded = true;
             });
     }
 
     private preloadImage(url:string) : Promise<void>
     {
-        console.log("preloading image..");        
+        console.log("preloading image..", {url});        
         return new Promise<void>((resolve, reject) => {
             var img=new Image();
-            img.onload = ()=> resolve();          
+            img.onload = ()=> {
+                console.log("image preloaded");
+                resolve();          
+            }
             img.src=url;
         });        
     }
     
     render() {
-        
         const isSearching = this.state.items == null;
-
         return <div>
             <div className="result-body" style={containerStyle}>
                 { isSearching ? this.renderSearching() : this.renderResults() }            
@@ -163,7 +194,7 @@ export class SearchPage extends React.Component<Props, State>
     renderPrevious()
     {
          const indx = this.state.currentItemIndex;
-        return <div className="item-button" style={{ left: 0 }} onClick={() => this.setState({currentItemIndex: indx-1})}>
+        return <div className="item-button" style={{ left: 0 }} onClick={() => this.setCurrentItemIndex(indx-1)}>
                 <div className="button"><i className="glyphicon glyphicon-triangle-left" /></div>
             </div>;
     }
@@ -171,7 +202,7 @@ export class SearchPage extends React.Component<Props, State>
     renderNext()
     {
          const indx = this.state.currentItemIndex;
-        return <div className="item-button" style={{ right: 0 }} onClick={() => this.setState({currentItemIndex: indx+1})}>
+        return <div className="item-button" style={{ right: 0 }} onClick={() => this.setCurrentItemIndex(indx+1)}>
                 <div className="button"><i className="glyphicon glyphicon-triangle-right" /></div>
             </div>;
     }
