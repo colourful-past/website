@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Button, Form, FormControl, Well} from "react-bootstrap";
 import * as Routes from "./Routes";
-import {dataSources} from "../../common/Models";
+import {dataSources,IDataSource} from "../../common/Models";
 import {SearchBar} from "./SearchBar";
 
 const containerStyle : React.CSSProperties = {
@@ -97,10 +97,10 @@ export class HomePage extends React.Component<Props, State>
         </div>;
     }
 
-    renderDataSourceCheck(ds)
+    renderDataSourceCheck(ds:IDataSource)
     {
         var isChecked = this.state.selectedDataSources.indexOf(ds.code) != -1;
-        return <div className="source-checkbox">
+        return <div className="source-checkbox" key={ds.code}>
             <label>
                 <input type="checkbox" checked={isChecked} onChange={() => this.toggleDataSource(ds.code)} /> { ds.name }
             </label>

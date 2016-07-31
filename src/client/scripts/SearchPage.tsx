@@ -5,6 +5,7 @@ import * as Routes from "./Routes";
 import * as axios from "axios";
 import {ISearchResult, ISearchItem, IColouriseResult} from "../../common/Models";
 import {PhotoSwipe} from "react-photoswipe";
+import * as helpers from "./helpers";
 
 const containerStyle : React.CSSProperties = {
     display: "flex",
@@ -101,21 +102,13 @@ export class SearchPage extends React.Component<Props, State>
         var item = this.state.items[this.state.currentItemIndex];
         item.isColourising = true;
         this.forceUpdate();
-        this.wait(1500)
+        helpers.wait(1500)
             .then(() => item.colourisePromise)
             .then(() => {                
                 item.isColourising = false;
                 item.showColourised = true;
                 this.forceUpdate();
             });
-    }
-
-    private wait(ms:number) : Promise<void>
-    {
-        console.log("waiting", {ms});
-        return new Promise<void>((resolve, reject) =>{
-            setTimeout(() => resolve(), ms);
-        })
     }
 
     private precolouriseAndPreload(item:ISearchItem) : Promise<void>
@@ -237,7 +230,7 @@ export class SearchPage extends React.Component<Props, State>
             </div>
             <div className="colourise">
                 { item.isColourising ? 
-                    colourisingMessages[Math.floor(Math.random()*colourisingMessages.length)] :
+                    helpers.randomOne(colourisingMessages) :
                     <a href="#" className="big-button" onClick={() => isColourised ? this.resetToOriginal() : this.colourise() }>
                         { isColourised ? "Reset" : "Bring to life!" }
                     </a>

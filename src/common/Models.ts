@@ -22,7 +22,13 @@ export interface IColouriseResult
     url: string;
 }
 
-export const dataSources = [
+export interface IDataSource
+{
+  code: string;
+  name: string;
+}
+
+export const dataSources : IDataSource[] = [
   {
     code: "slwa",
     name: "WA (State Library)"
