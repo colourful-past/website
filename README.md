@@ -1,7 +1,6 @@
-Govhack Perth 2016 Entry
-=============
+# Govhack Perth 2016 Entry - Colourful Past
 
-https://govhack-perth-2016.herokuapp.com/
+http://colourfulpast.org/
 
 ## To Install
 
