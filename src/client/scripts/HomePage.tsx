@@ -100,6 +100,7 @@ export class HomePage extends React.Component<Props, State>
 
                 <div className="attribution">
                     <a href="http://wa.govhack.org/">GovHack Perth 2016</a>&nbsp;&middot;
+                    <span className="hide-on-mobile"> <a href="https://github.com/colourful-past">Source</a>&nbsp;&middot; </span>
                     based on <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a>
                     <span className="hide-on-mobile"> by Zhang, et. al</span>
                 </div>
