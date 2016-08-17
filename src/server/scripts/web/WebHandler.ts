@@ -8,9 +8,34 @@ import * as _ from "underscore";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { default as keys } from "../keys";
+import * as crypto from "crypto";
 
+import { default as keys } from "../keys";
 //const env = JSON.parse(fs.readFileSync(path.join(os.homedir(), 'keys.json'), { encoding: 'utf8' }));
+
+
+// server resilience hack: we can't afford GPU boxes anymore, so at
+// server startup, list our S3 bucket and generate a map in which
+// to look up what search results have been colourised already
+var alreadyProcessedFiles = {}
+if (process.env.NODE_ENV === 'production') {
+    var text = '';
+    const child = spawn('/usr/local/bin/aws', ['s3', 'ls', 's3://colourful-past/', '--recursive'], { env: keys });
+
+    child.stdout.on('data', (data) => {
+      text += data;
+    });
+    child.stderr.on('data', (data) => {});
+
+    child.on('close', (code) => {
+      var lines = text.split('\n');
+      lines.forEach((line) => {
+        if (!line) { return; }
+        alreadyProcessedFiles[line.substr(31)] = true;
+      });
+  });
+}
+
 
 export class WebServer {
     httpServer: Server;
@@ -52,8 +77,22 @@ export class WebServer {
             Promise.all(promises)
                 .then(sourceItems => {
                     console.log("got all source's items", {sourceItems});
-                    sourceItems = sourceItems.map(items => items.slice(0, 5));
-                    var allItems = _.flatten(sourceItems);
+                    // sourceItems = sourceItems.map(items => items.slice(0, 5));
+                    var candidateItems = _.flatten(sourceItems);
+
+                    // take all the items returned by Python, check each to see if it's been
+                    // colourised already, build a new array (to return to user) with those
+                    var allItems = [];
+                    candidateItems.forEach(item => {
+                        const hash = crypto.createHash('md5');
+                        hash.update(item.originalImageUrl);
+                        const outputFile = hash.digest('hex') + '.jpg';
+
+                        if (alreadyProcessedFiles[outputFile]) {
+                            allItems.push(item);
+                        }
+                    });
+
                     console.log("flattened items", {allItems});
                     allItems = _.shuffle(allItems);
                     console.log("shuffled items", {allItems});
@@ -69,9 +108,15 @@ export class WebServer {
             console.log("attempting to colourise", {url});
             
 
-            if (process.env.NODE_ENV === 'production') { 
-                axios.get("http://localhost:8000/colour", { params: { url }})
-                    .then(resp =>  res.json({ url: resp.data }));
+            if (process.env.NODE_ENV === 'production') {
+                // don't run the backend colouriser anymore, just point straight to the MD5-ified filename in S3
+                const hash = crypto.createHash('md5');
+                hash.update(url);
+                const outputFile = hash.digest('hex') + '.jpg';
+                res.json({ url: "https://s3-us-west-2.amazonaws.com/colourful-past/" + outputFile });
+
+                // axios.get("http://localhost:8000/colour", { params: { url }})
+                //     .then(resp =>  res.json({ url: resp.data }));
             }
             else
             {
